@@ -1,43 +1,31 @@
 #include <iostream>
 #include <string>
-#include <math.h>
+#include <cmath>
 
-using namespace std;0KGh&k8!2nub7^$Q
+using namespace std;
+
+//definitions of fixed values
+#define EqatorialRadius 6378137 //radius of the equator in m
+#define ScaleFactor .9996 
+#define EccentricitySquared .00669438
+
 
 struct mgrs{
     string gsd;
-    string sqareid;
+    string squareid;
     int easting;
     int northing;
 };
 
-//function to find the grid zone
-int findGridZone(float lat , float longitude){
-    
-    
-
-
-
+int calcUTMeast(double lat, double longitude){
+    double N = EqatorialRadius/sqrt(1-EccentricitySquared*sin(lat*3.141592658979/180)^2)
 }
 
 
 
-// convert the lat long into mgrs coords
-int latlongtoMGRS(mgrs coords, float lat, float longitude){
-    
-
-    
-
-    return 0;
-}
-
-
-
-
-int main(float lat, float longitude){
+int main(double lat, double longitude){
     mgrs coords;
-
-    latlongtoMGRS(coords, lat, longitude);
+    coords.squareid = "test";
     
     
     
