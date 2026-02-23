@@ -2,7 +2,7 @@
 #include <string>
 #include <math.h>
 
-using namespace std;
+using namespace std;0KGh&k8!2nub7^$Q
 
 struct mgrs{
     string gsd;
@@ -13,7 +13,7 @@ struct mgrs{
 
 //function to find the grid zone
 int findGridZone(float lat , float longitude){
-    int zoneNum = (longitude + 180) / 2;
+    
     
 
 
@@ -26,7 +26,7 @@ int findGridZone(float lat , float longitude){
 int latlongtoMGRS(mgrs coords, float lat, float longitude){
     
 
-    cout << "MGRS: " << mgrs.gsd << " " << mgrs.sqareid << " " << mgrs.easting << " " << mgrs.northing << endl;
+    
 
     return 0;
 }
