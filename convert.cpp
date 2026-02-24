@@ -47,22 +47,26 @@ int main(){
     
     //array for background calculations
     double backgroundarr[7]; //utmzone, meridian, N, T, C, A, M
-    
+
+    //below are some calulations that several of the equations contain, only doing the math once to save compute cycles
+    double latpidiv = lat*3.141592658979/180;
+
+
     //background calculations for the easting and northing
     //utmzone
     backgroundarr[0] = int((longitude+180)/6)+1;
     //centralMeridian    
     backgroundarr[1] = (backgroundarr[0]-1)*6-180+3;
     //N
-    backgroundarr[2] = EqatorialRadius / sqrt(1-EccentricitySquared*pow(sin(lat*3.141592658979/180),2.0));
+    backgroundarr[2] = EqatorialRadius / sqrt(1-EccentricitySquared*pow(sin(latpidiv),2.0));
     //T
-    backgroundarr[3] = pow(tan(lat*3.141592658979/180), 2.0);
+    backgroundarr[3] = pow(tan(latpidiv), 2.0);
     //C
-    backgroundarr[4] = pow(EccentricitySquared * cos(lat*3.141592658979/180),2.0);
+    backgroundarr[4] = pow(EccentricitySquared * cos(latpidiv),2.0);
     //A
-    backgroundarr[5] = cos(lat*3.141592658979/180)*(longitude-backgroundarr[1])*3.141592658979/180;
+    backgroundarr[5] = cos(latpidiv)*(longitude-backgroundarr[1])*3.141592658979/180;
     //M
-    backgroundarr[6] = EqatorialRadius*((1-EccentricitySquared/4-3*pow(EccentricitySquared,2.0)/64-5*pow(EccentricitySquared,3.0)/256)*lat*3.141592658979/180-(3*EccentricitySquared/8+3*pow(EccentricitySquared,2.0)/32+45*pow(EccentricitySquared,3.0)/1024)*sin(2*lat*3.141592658979/180)+(15*pow(EccentricitySquared,2.0)/256+45*pow(EccentricitySquared,3.0)/1024)*sin(4*lat*3.141592658979/180)-(35*pow(EccentricitySquared,3.0)/3072)*sin(6*lat*3.141592658979/180));
+    backgroundarr[6] = EqatorialRadius*((1-EccentricitySquared/4-3*pow(EccentricitySquared,2.0)/64-5*pow(EccentricitySquared,3.0)/256)*latpidiv-(3*EccentricitySquared/8+3*pow(EccentricitySquared,2.0)/32+45*pow(EccentricitySquared,3.0)/1024)*sin(2*latpidiv)+(15*pow(EccentricitySquared,2.0)/256+45*pow(EccentricitySquared,3.0)/1024)*sin(4*latpidiv)-(35*pow(EccentricitySquared,3.0)/3072)*sin(6*latpidiv));
 
 
     
