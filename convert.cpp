@@ -10,14 +10,6 @@ using namespace std;
 #define EccentricitySquared .00669438
 
 
-struct mgrs{
-    string gsd;
-    string squareid;
-    int easting;
-    int northing;
-};
-
-
 
 //function to calclate the easting
 double calcUTMeast(double arr[7]){
@@ -39,8 +31,6 @@ double calcUTMnorth(double lat, double arr[7]){
 
 
 int main(){
-    mgrs coords;
-    coords.squareid = "test";
     //test coords mgrs for it is: 15R VQ 90816 46052  UTM:15R 490816.69 3446052.01
     double lat = 31.14839523291297;
     double longitude = -93.09634421104477;
@@ -68,12 +58,19 @@ int main(){
     //M
     backgroundarr[6] = EqatorialRadius*((1-EccentricitySquared/4-3*pow(EccentricitySquared,2.0)/64-5*pow(EccentricitySquared,3.0)/256)*latpidiv-(3*EccentricitySquared/8+3*pow(EccentricitySquared,2.0)/32+45*pow(EccentricitySquared,3.0)/1024)*sin(2*latpidiv)+(15*pow(EccentricitySquared,2.0)/256+45*pow(EccentricitySquared,3.0)/1024)*sin(4*latpidiv)-(35*pow(EccentricitySquared,3.0)/3072)*sin(6*latpidiv));
 
-
+    //calculate lattitude
+    char latband ='a';
+    //key for lattitude bands counts from the eqator up, then from the equator down
+    char latbandkey[20] = {/*equator->up*/'N','P','Q','R','S','T','U','V','W','X',/*equator->down*/'M','L','K','J','H','G','F','E','D','C'};
+    int latpos = lat;
+    if(lat<0){
+        
+        latpos =(latpos*-1)+80;
+    }
+    latband = latbandkey[latpos/8];
     
     
-    
-    
-    printf("%f\n", calcUTMnorth(lat, backgroundarr));
+    printf("%c\n", latband);
     
     
     return 0;
