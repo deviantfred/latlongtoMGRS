@@ -68,9 +68,21 @@ int main(){
         latpos =(latpos*-1)+80;
     }
     latband = latbandkey[latpos/8];
+
+    //calculate easting and northing
+    double easting = calcUTMeast(backgroundarr);
+    double northing = calcUTMnorth(lat, backgroundarr);
     
-    
-    printf("%c\n", latband);
+    //keys to identify the 100,000m zone 
+    char vertzonedesignatorkey[24] = {'A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V'};
+    char horzonedesignatorkey[3][8] = {{'A','B','C','D','E','F','G','H'},{'J','K','L','M','N','P','Q','R'},{'S','T','U','V','W','X','Y','Z'}};
+
+    char squareId[2];
+    squareId[0] = horzonedesignatorkey[(int(backgroundarr[0])-1)%3][int(easting/100000)-1];
+    squareId[1] = vertzonedesignatorkey[(int(northing)%2000000)/100000];
+
+    printf("%d %d\n",(int(backgroundarr[0])-1)%3, int(easting/100000)-1);
+    printf("%c%c\n", squareId[0], squareId[1]);
     
     
     return 0;
