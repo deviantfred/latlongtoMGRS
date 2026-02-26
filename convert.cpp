@@ -26,15 +26,16 @@ double calcUTMnorth(double lat, double arr[7]){
     }else{
         falsenorth=0;
     }
-    double utmnorth = ScaleFactor*(arr[6]+arr[2]*tan(lat*3.141592658979/180)*(arrfivesquare/2+(5-arr[3]+9*arr[4]+4*pow(arr[4],2.0))*(arrfivesquare*arrfivesquare)/24+(61-58*arr[3]+pow(arr[3],2.0)+600*arr[4]-330*EccentricitySquared)*(arrfivesquare*arrfivesquare*arrfivesquare)/720))+falsenorth;
+    double utmnorth = ScaleFactor*(arr[6]+arr[2]*tan(lat*3.141592658979/180)*(arrfivesquare/2+(5-arr[3]+9*arr[4]+4*(arr[4]*arr[4]))*(arrfivesquare*arrfivesquare)/24+(61-58*arr[3]+(arr[3]*arr[3])+600*arr[4]-330*EccentricitySquared)*(arrfivesquare*arrfivesquare*arrfivesquare)/720))+falsenorth;
     return utmnorth;
 }
 
 
-int main(){
+int main(int argc, char* argv[]){
     //test coords mgrs for it is: 15R VQ 90816 46052  UTM:15R 490816.69 3446052.01
-    double lat = 31.14839523291297;
-    double longitude = -93.09634421104477;
+    double lat = atof(argv[1]);
+    double longitude = atof(argv[2]);
+
     
     //variable declarations
     double backgroundarr[7]; //array for map reprojection cals(utmzone, meridian, N, T, C, A, M)
@@ -47,7 +48,8 @@ int main(){
     
     //static values
     char latbandkey[20] = {/*equator->up*/'N','P','Q','R','S','T','U','V','W','X',/*equator->down*/'M','L','K','J','H','G','F','E','D','C'};//GZD lattitude band key
-    char vertzonedesignatorkey[24] = {'A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V'};//key for 100,000m square id northing
+    char vertzonedesignatorkeyod[24] = {'A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V'};//key for 100,000m square id northing odd zones
+    char vertzonedesignatorkeyev[24] = {'F','G','H','J','K','L','M','N','P','Q','R','S','T','U','V','A','B','C','D','E'};//key for 100,000m square id northing even zones
     char horzonedesignatorkey[3][8] = {{'A','B','C','D','E','F','G','H'},{'J','K','L','M','N','P','Q','R'},{'S','T','U','V','W','X','Y','Z'}};//key for 100,000m square id easting
     
     
@@ -92,8 +94,12 @@ int main(){
     
     mgrseasting = int(easting)%100000;
     mgrsnorthing = int(northing)%100000;
+    if(int(backgroundarr[0])%2 != 0){
+        squareId[1] = vertzonedesignatorkeyod[(int(northing)%2000000)/100000];
+    }else{
+        squareId[1] = vertzonedesignatorkeyev[(int(northing)%2000000)/100000];
+    }
     squareId[0] = horzonedesignatorkey[(int(backgroundarr[0])-1)%3][int(easting/100000)-1];
-    squareId[1] = vertzonedesignatorkey[(int(northing)%2000000)/100000];
 
     printf("%d%c %c%c %d %d\n",int(backgroundarr[0]),latband,squareId[0],squareId[1],mgrseasting, mgrsnorthing);
     
