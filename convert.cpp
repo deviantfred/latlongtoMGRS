@@ -78,10 +78,12 @@ int main(){
     char horzonedesignatorkey[3][8] = {{'A','B','C','D','E','F','G','H'},{'J','K','L','M','N','P','Q','R'},{'S','T','U','V','W','X','Y','Z'}};
 
     char squareId[2];
+    int mgrseasting = int(easting)%100000;
+    int mgrsnorthing = int(northing)%100000;
     squareId[0] = horzonedesignatorkey[(int(backgroundarr[0])-1)%3][int(easting/100000)-1];
     squareId[1] = vertzonedesignatorkey[(int(northing)%2000000)/100000];
 
-    printf("%d %d\n",(int(backgroundarr[0])-1)%3, int(easting/100000)-1);
+    printf("%d %d\n",mgrseasting, mgrsnorthing);
     printf("%c%c\n", squareId[0], squareId[1]);
     
     
