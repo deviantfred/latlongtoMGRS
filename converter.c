@@ -40,12 +40,14 @@ int main(int argc, char* argv[]){
     double longitude = atof(argv[2]);
 
     long int divider = 10000000;
-    int degpart = abs((int32_t)(lat*divider))/divider;
-    int fractpart = (abs((int32_t)(lat*divider))%divider);
+    int32_t modifiedlong = longitude*divider;
+    int degpart = modifiedlong/divider;
+    int fractpart = (abs(modifiedlong)%divider);
 
+    double newlong = ((double)modifiedlong)/divider;
 
     printf("as double %f  %f\n", lat, longitude);
-    printf("as int32 %u.%07u  %d\n", degpart, fractpart, (int32_t)longitude);
+    printf("as int32 %d.%07u  %f\n", degpart, fractpart, newlong);
     
     //variable declarations
     double backgroundarr[7]; //array for map reprojection cals(utmzone, meridian, N, T, C, A, M)
