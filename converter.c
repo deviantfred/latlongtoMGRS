@@ -35,9 +35,17 @@ double calcUTMnorth(double lat, double arr[7]){
 
 
 int main(int argc, char* argv[]){
-    //test coords mgrs for it is: 15R VQ 90816 46052  UTM:15R 490816.69 3446052.01
+    //take lat long from command line
     double lat = atof(argv[1]);
     double longitude = atof(argv[2]);
+
+    long int divider = 10000000;
+    int degpart = abs((int32_t)(lat*divider))/divider;
+    int fractpart = (abs((int32_t)(lat*divider))%divider);
+
+
+    printf("as double %f  %f\n", lat, longitude);
+    printf("as int32 %u.%07u  %d\n", degpart, fractpart, (int32_t)longitude);
     
     //variable declarations
     double backgroundarr[7]; //array for map reprojection cals(utmzone, meridian, N, T, C, A, M)
