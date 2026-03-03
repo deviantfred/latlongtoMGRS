@@ -1,8 +1,10 @@
-#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
-
+#include <ctype.h>
+#include <math.h>
+#include <stdio.h>
 
 
 //definitions of fixed values
@@ -61,15 +63,15 @@ int main(int argc, char* argv[]){
     
     //background calculations for the easting and northing
     //utmzone
-    backgroundarr[0] = int((longitude+180)/6)+1;
+    backgroundarr[0] = (int)((longitude+180)/6)+1;
     //centralMeridian    
     backgroundarr[1] = (backgroundarr[0]-1)*6-180+3;
     //N
-    backgroundarr[2] = EqatorialRadius / sqrt(1-EccentricitySquared*pow(sin(latpidiv),2.0));
+    backgroundarr[2] = EqatorialRadius / sqrt(1-EccentricitySquared*(sin(latpidiv)*sin(latpidiv)));
     //T
-    backgroundarr[3] = pow(tan(latpidiv), 2.0);
+    backgroundarr[3] = tan(latpidiv)*tan(latpidiv);
     //C
-    backgroundarr[4] = pow(EccentricitySquared * cos(latpidiv),2.0);
+    backgroundarr[4] = (EccentricitySquared * cos(latpidiv))*(EccentricitySquared * cos(latpidiv));
     //A
     backgroundarr[5] = cos(latpidiv)*(longitude-backgroundarr[1])*3.141592658979/180;
     //M
@@ -85,23 +87,31 @@ int main(int argc, char* argv[]){
     latband = latbandkey[latpos/8];
 
     //calculate easting and northing
-    easting = calcUTMeast(backgroundarr);
-    northing = calcUTMnorth(lat, backgroundarr);
+    easting = ScaleFactor * backgroundarr[2] * (backgroundarr[5] + (1 - backgroundarr[3] + backgroundarr[4]) * (backgroundarr[5]*backgroundarr[5]*backgroundarr[5]) / 6 + (5 - 18 * backgroundarr[3] + (backgroundarr[3]*backgroundarr[3]) + 72 * backgroundarr[4] - 58 * EccentricitySquared) * (backgroundarr[5]*backgroundarr[5]*backgroundarr[5]*backgroundarr[5]*backgroundarr[5]) / 120) + 500000; 
+    int falsenorth;
+    double arrfivesquare = backgroundarr[5] * backgroundarr[5];
+    if(lat<0){
+        falsenorth=10000000;
+    }else{
+        falsenorth=0;
+    }
+    northing = ScaleFactor*(backgroundarr[6]+backgroundarr[2]*tan(lat*3.141592658979/180)*(arrfivesquare/2+(5-backgroundarr[3]+9*backgroundarr[4]+4*(backgroundarr[4]*backgroundarr[4]))*(arrfivesquare*arrfivesquare)/24+(61-58*backgroundarr[3]+(backgroundarr[3]*backgroundarr[3])+600*backgroundarr[4]-330*EccentricitySquared)*(arrfivesquare*arrfivesquare*arrfivesquare)/720))+falsenorth;
+    
     
     //keys to identify the 100,000m zone 
     
 
     
-    mgrseasting = int(easting)%100000;
-    mgrsnorthing = int(northing)%100000;
-    if(int(backgroundarr[0])%2 != 0){
-        squareId[1] = vertzonedesignatorkeyod[(int(northing)%2000000)/100000];
+    mgrseasting = (int)(easting)%100000;
+    mgrsnorthing = (int)(northing)%100000;
+    if((int)(backgroundarr[0])%2 != 0){
+        squareId[1] = vertzonedesignatorkeyod[((int)(northing)%2000000)/100000];
     }else{
-        squareId[1] = vertzonedesignatorkeyev[(int(northing)%2000000)/100000];
+        squareId[1] = vertzonedesignatorkeyev[((int)(northing)%2000000)/100000];
     }
-    squareId[0] = horzonedesignatorkey[(int(backgroundarr[0])-1)%3][int(easting/100000)-1];
+    squareId[0] = horzonedesignatorkey[((int)(backgroundarr[0])-1)%3][(int)(easting/100000)-1];
 
-    printf("%d%c %c%c %d %d\n",int(backgroundarr[0]),latband,squareId[0],squareId[1],mgrseasting, mgrsnorthing);
+    printf("%d%c %c%c %d %d\n",(int)(backgroundarr[0]),latband,squareId[0],squareId[1],mgrseasting, mgrsnorthing);
     
     
     
